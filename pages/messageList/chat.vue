@@ -2,10 +2,10 @@
 	<view class="chatView">
 		<view class="backBox flex align-center justify-between">
 			<view class="back">
-				<text class="cuIcon cuIcon-back"></text>
+				<text @click="back" style="margin-right: 4px;" class="cuIcon cuIcon-back"></text>
 				张先生
 			</view>
-			<view class="cuIcon cuIcon-more"></view>
+			<view @click="gotoInfomation" class="cuIcon cuIcon-more"></view>
 		</view>
 
 		<!-- <scroll-view :style="{ height: chatContentHeight }" scroll-y="true" scroll-with-animation  :scroll-into-view="scrollInfo" id="chatContent" class="chatContent"> -->
@@ -151,8 +151,12 @@
 					</view>
 				</view>
 			</view>
-			<view class="moreMenuBox" v-show="showMoreMenu" >
-				
+			
+			<view  class="moreMenuBox flex flex-wrap align-center" v-show="showMoreMenu" >
+				 <view v-for="(item,index) in meunList" :key="index" class="item flex flex-direction align-center justify-center">
+				 	<image :src="item.icon" mode="aspectFill"></image>
+					<text>{{item.name}}</text>
+				 </view>
 			</view>
 		</view>
 	</view>
@@ -172,6 +176,13 @@ export default {
 			maxHeight: '',
 			
 			menuType:'text',
+			meunList:[
+				{icon:'/static/chat_pic9.png',name:'拍摄'},
+				{icon:'/static/chat_pic5.png',name:'相册'},
+				{icon:'/static/chat_pic6.png',name:'位置'},
+				{icon:'/static/chat_pic7.png',name:'名片'},
+				{icon:'/static/chat_pic8.png',name:'文件'},
+			],
 			iptFocus:false
 		};
 	},
@@ -199,6 +210,16 @@ export default {
 		this.maxHeight = this.chatContentHeight;
 	},
 	methods: {
+		gotoInfomation(){
+			uni.navigateTo({
+				url:"/pages/messageList/contactInformation"
+			})
+		},
+		back(){
+			uni.navigateBack({
+				delta:1
+			})
+		},
 		changeFocus(type){
 			console.log(type);
 			this.iptFocus = type
@@ -233,6 +254,32 @@ export default {
 		},
 		changeShowMoreMenu(){
 			this.menuType = 'text'
+			this.showMoreMenu = !this.showMoreMenu 
+			this.showEmoji = false 
+			let chatContentHeight = '255.53px';
+			let chatContentTop = 98.836;
+			let bottomSendMessageMenuTop = 354.365; 
+			setTimeout(() => {
+				this.query
+					.select('#chatContent')
+					.boundingClientRect(data => {
+						chatContentTop = data.top;
+					})
+					.exec();
+				this.query
+					.select('#bottomSendMessageMenu')
+					.boundingClientRect(data => {
+						bottomSendMessageMenuTop = data.top;
+					})
+					.exec();
+				chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
+				console.log(bottomSendMessageMenuTop,chatContentTop,chatContentHeight)
+				this.chatContentHeight = chatContentHeight;
+				this.scrollInfo = 'msg1';
+				if (!this.showMoreMenu) {
+					this.chatContentHeight = this.maxHeight;
+				}
+			}, 600);
 		},
 		emojiClick(item) {
 			console.log(item);
@@ -495,6 +542,34 @@ page {
 						width: 44rpx;
 						height: 44rpx;
 					}
+				}
+			}
+		}
+		
+		.moreMenuBox{
+			background-color: #f5f5f8;
+			padding: 0 28rpx;
+			
+			padding-top: 18px;
+			.item{
+				width:180rpx;
+				height:180rpx;
+				background:rgba(255,255,255,1);
+				box-shadow:0px 8rpx 18rpx 0px rgba(143,143,143,0.11);
+				border-radius:28rpx;
+				border:1rpx solid rgba(239,243,251,1); 
+				margin-right: 76rpx;
+				margin-bottom: 28px;
+				&:nth-child(3n){
+					margin-right: 0;
+				}
+				image{
+					width: 96rpx;
+					height: 94rpx;
+				}
+				text{
+					font-size: 14px;
+					color: #666;
 				}
 			}
 		}
