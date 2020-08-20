@@ -84,8 +84,8 @@ page {
 				content: '';
 				border-radius: 0 0 50% 50%;
 				background-image: url(../../static/logo.png);
-				background-size: 80% auto;
-				background-position: center;
+				background-size: 80% 80%;
+				background-position: center top;
 				background-repeat: no-repeat;
 				filter: blur(4px);
 			}

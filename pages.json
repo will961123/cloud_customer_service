@@ -11,19 +11,39 @@
 			"style": {}
 		}, {
 			"path": "pages/messageList/chat",
-			"style": {}
+			"style": {
+				// "app-plus": {
+				// 	"titleNView": false, //不启用系统导航
+				// 	"subNVues": [{
+				// 		"id": "popup", // 唯一标识  
+				// 		"path": "pages/messageList/recording", // 页面路径  
+				// 		"type": "popup", //原生子窗口内置样式，可取值：'popup',弹出层；"navigationBar",导航栏
+				// 		"style": {
+				// 			"background": "rgba(0,0,0,0.1)",
+				// 			"margin": "auto",
+				// 			"width": "145px",
+				// 			"height": "145px"
+
+				// 		}
+				// 	}]
+				// }
+			}
 		}, {
 			"path": "pages/service/service",
 			"style": {}
 		}, {
 			"path": "pages/my/my",
 			"style": {}
-		} 
-	    ,{
-            "path" : "pages/messageList/contactInformation",
-            "style" : {}
-        }
-    ],
+		}, {
+			"path": "pages/messageList/contactInformation",
+			"style": {}
+		}
+		// , {
+		// 	"path": "pages/messageList/recording",
+		// 	"style": {}
+		// }
+
+	],
 	"globalStyle": {
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",

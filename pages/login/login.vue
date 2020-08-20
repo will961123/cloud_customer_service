@@ -7,15 +7,15 @@
 		<form @submit="userLogin">
 			<view :style="{ height: formHeight }" id="form" class="form bg-white">
 				<view class="iptBox flex align-center">
-					<image src="/static/login_pic1.png" mode="aspectFill"></image>
+					<image src="/static/login_pic1.png" mode="widthFix"></image>
 					<input type="text" name="enterpriseId" placeholder="请输入企业号" />
 				</view>
 				<view class="iptBox flex align-center">
-					<image src="/static/login_pic2.png" mode="aspectFill"></image>
+					<image src="/static/login_pic2.png" mode="widthFix"></image>
 					<input type="text" name="userName" placeholder="请输入用户名" />
 				</view>
 				<view class="iptBox flex align-center">
-					<image src="/static/login_pic3.png" mode="aspectFill"></image>
+					<image src="/static/login_pic3.png" mode="widthFix"></image>
 					<input type="password" name="passWord" placeholder="请输入密码" />
 				</view>
 				<button class="btn cu-btn" form-type="submit">登录</button>
@@ -44,9 +44,9 @@ export default {
 	methods: {
 		userLogin(e) {
 			console.log(e);
-			uni.navigateTo({
+			uni.redirectTo({
 				url:"/pages/index/index"
-			})
+			}) 
 		}
 	}
 };
@@ -80,8 +80,8 @@ export default {
 			border: 1rpx solid rgba(239, 239, 239, 1);
 			margin-bottom: 36px;
 			image {
-				width: 16px;
-				height: 17px;
+				width: 17px;
+				// height: 17px;
 				margin-right: 24rpx;
 			}
 			input {

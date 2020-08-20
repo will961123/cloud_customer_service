@@ -1,0 +1,40 @@
+<template>
+	<view class="recording">
+		<image class="microphone" src="/static/chat_pic11.png" mode="aspectFill"></image>
+		<image class="audio" src="/static/chat_pic12.png" mode="aspectFill"></image>
+		<view>手指上滑，取消发送</view>
+	</view>
+</template>
+
+<script>
+export default {
+	data() {
+		return {};
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.recording {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 14px;
+	background-color: red;
+	// background-color: rgba(0,0,0,.9);
+	font-size: 12px;
+	padding: 4px 0px 19px 5px;
+	text-align: center;
+	color: #fff;
+	.microphone {
+		width: 80px;
+		height: 98px;
+	}
+	.audio {
+		width: 35px;
+		height: 35px;
+		margin-right: 25px;
+	}
+}
+</style>

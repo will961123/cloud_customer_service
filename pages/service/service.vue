@@ -1,7 +1,8 @@
 <template>
 	<view class="serviceView">
 		<view class="titleBox"><view class="tit">应用服务</view></view>
-		<!-- <navigator url="./s1">subNVues</navigator> -->
+		<!-- <navigator url="./demo">demo</navigator> -->
+<!-- 		<navigator url="./s1">subNVues</navigator> -->
 		<view :style="{ height: menuBoxHeight }" id="menuBox" class="menuBox bg-white">
 			<view class="menuType">云交付</view>
 			<view style="margin-bottom: 30px;" class="menuList flex  ">

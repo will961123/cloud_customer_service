@@ -9,7 +9,7 @@
 		</view>
 
 		<!-- <scroll-view :style="{ height: chatContentHeight }" scroll-y="true" scroll-with-animation  :scroll-into-view="scrollInfo" id="chatContent" class="chatContent"> -->
-		<view :style="{ height: chatContentHeight }" id="chatContent" class="chatContent">
+		<view  :style="{ height: chatContentHeight }"  id="chatContent" class="chatContent">
 			<view class="message message-left message-text flex flex-wrap">
 				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
 				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center">
@@ -66,7 +66,7 @@
 					</view>
 				</view>
 				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
-			</view> 
+			</view>
 
 			<view class="message message-right message-emoji  flex flex-wrap ">
 				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center justify-end">
@@ -103,7 +103,7 @@
 					<view class="message-time">15:01</view>
 					<view class="message-content">
 						<view class="video">
-							<video :controls="false" :show-play-btn="false" objectFit="cover" src="https://img-cdn-qiniu.dcloud.net.cn/hello-nvue-swiper-vertical-01.mp4"></video>
+							<video :show-center-play-btn="true" :controls="false" :show-play-btn="false" objectFit="cover" src="https://img-cdn-qiniu.dcloud.net.cn/hello-nvue-swiper-vertical-02.mp4"></video>
 						</view>
 					</view>
 				</view>
@@ -119,7 +119,9 @@
 								<view class="tit">天河广场</view>
 								<view class="desc">广东省某某详细地址</view>
 							</view>
-							<map latitude="33.589570296081575" longitude="114.02628449882506"></map>
+							<view class="mapBg">
+								
+							</view> 
 						</view>
 					</view>
 				</view>
@@ -127,13 +129,17 @@
 			</view>
 		</view>
 
-		<view id="bottomSendMessageMenu" class="bottomSendMessageMenu bg-white">
+		<view   id="bottomSendMessageMenu" class="bottomSendMessageMenu bg-white"> 
 			<view class="content type-send flex align-center">
-				<image class="microphone" src="/static/chat_pic1.png" mode="aspectFill"></image>
-				<view class="iptBox"><input @blur="changeFocus(false)" @focus="changeFocus(true)" type="text" /></view>
+				<image v-show="menuType !== 'audio'" @click="changeAudioType(true)" class="microphone" src="/static/chat_pic1.png" mode="aspectFill"></image>
+				<image v-show="menuType === 'audio'" @click="changeAudioType(false)" class="keyBoard" src="/static/chat_pic10.png" mode="aspectFill"></image>
+				<view class="iptBox">
+					<input v-show="menuType !== 'audio'" @blur="changeFocus(false)" @focus="changeFocus(true)" type="text" />
+					<text @touchstart="audioTouchStart" @touchend="audioTouchEnd" v-show="menuType === 'audio'">{{ isRecording ? '松开发送' : '按住说话' }}</text>
+				</view>
 				<image @click="changeShowEmoji" class="emoji" src="/static/chat_pic2.png" mode="aspectFill"></image>
-				<image v-show="menuType==='text'&&!iptFocus" class="moreMenu" @click="changeShowMoreMenu" src="/static/chat_pic3.png" mode="aspectFill"></image>
-				<view v-show="iptFocus||menuType==='emoji'" class="btn cu-btn">发送</view>
+				<image v-show="menuType === 'text' && !iptFocus" class="moreMenu" @click="changeShowMoreMenu" src="/static/chat_pic3.png" mode="aspectFill"></image>
+				<view v-show="iptFocus || menuType === 'emoji' || menuType === 'audio'" class="btn cu-btn">发送</view>
 			</view>
 
 			<view class="emojiBox" v-show="showEmoji">
@@ -151,12 +157,23 @@
 					</view>
 				</view>
 			</view>
-			
-			<view  class="moreMenuBox flex flex-wrap align-center" v-show="showMoreMenu" >
-				 <view v-for="(item,index) in meunList" :key="index" class="item flex flex-direction align-center justify-center">
-				 	<image :src="item.icon" mode="aspectFill"></image>
-					<text>{{item.name}}</text>
-				 </view>
+
+			<view class="moreMenuBox flex flex-wrap align-center" v-show="showMoreMenu">
+				<view v-for="(item, index) in meunList" :key="index" class="item flex flex-direction align-center justify-center">
+					<image :src="item.icon" mode="aspectFill"></image>
+					<text>{{ item.name }}</text>
+				</view>
+			</view>
+		</view>
+ 
+
+		<view v-show="menuType==='audio'&&isRecording" class="recordingAnimation">
+			<view class="flex align-center">
+				<image class="microphone" src="/static/chat_pic11.png" mode="aspectFill"></image>
+				<image class="audio" src="/static/chat_pic12.png" mode="aspectFill"></image>
+			</view>
+			<view >
+				手指上滑，取消发送
 			</view>
 		</view>
 	</view>
@@ -168,22 +185,23 @@ export default {
 	data() {
 		return {
 			showEmoji: false,
-			showMoreMenu:false,
+			showMoreMenu: false,
+			isRecording: false,
 			emojiName: emojiName,
 			chatContentHeight: '507px',
 			query: null,
 			scrollInfo: '',
 			maxHeight: '',
-			
-			menuType:'text',
-			meunList:[
-				{icon:'/static/chat_pic9.png',name:'拍摄'},
-				{icon:'/static/chat_pic5.png',name:'相册'},
-				{icon:'/static/chat_pic6.png',name:'位置'},
-				{icon:'/static/chat_pic7.png',name:'名片'},
-				{icon:'/static/chat_pic8.png',name:'文件'},
+
+			menuType: 'text',
+			meunList: [
+				{ icon: '/static/chat_pic9.png', name: '拍摄' },
+				{ icon: '/static/chat_pic5.png', name: '相册' },
+				{ icon: '/static/chat_pic6.png', name: '位置' },
+				{ icon: '/static/chat_pic7.png', name: '名片' },
+				{ icon: '/static/chat_pic8.png', name: '文件' }
 			],
-			iptFocus:false
+			iptFocus: false
 		};
 	},
 	onReady() {
@@ -207,30 +225,48 @@ export default {
 		// chatContentHeight = 'calc(100vh - ' + (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px)';
 		chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
 		this.chatContentHeight = chatContentHeight;
-		this.maxHeight = this.chatContentHeight;
+		this.maxHeight = this.chatContentHeight; 
 	},
 	methods: {
-		gotoInfomation(){
+		gotoInfomation() {
 			uni.navigateTo({
-				url:"/pages/messageList/contactInformation"
-			})
+				url: '/pages/messageList/contactInformation'
+			});
 		},
-		back(){
+		back() {
 			uni.navigateBack({
-				delta:1
-			})
+				delta: 1
+			});
 		},
-		changeFocus(type){
+		changeFocus(type) {
 			console.log(type);
-			this.iptFocus = type
+			this.iptFocus = type;
+		},
+		audioTouchStart() {
+			console.log('start');
+			this.isRecording = true;
+
+			// const subNVue = uni.getSubNVueById('popup'); // 通过 id 获取 nvue 子窗体
+			// subNVue.show('slide-in-top', 250); // 打开 nvue 子窗体
+		},
+		audioTouchEnd() {
+			console.log('end');
+			this.isRecording = false;
+
+			// const subNVue = uni.getSubNVueById('popup'); // 通过 id 获取 nvue 子窗体
+			// subNVue.hide('slide-in-top', 250); // 打开 nvue 子窗体
+		},
+		changeAudioType(type) {
+			this.menuType = type ? 'audio' : 'text';
+			this.isRecording = false;
 		},
 		changeShowEmoji() {
 			this.showEmoji = !this.showEmoji;
-			this.showMoreMenu = false
+			this.showMoreMenu = false;
 			let chatContentHeight = '265.53px';
 			let chatContentTop = 98.836;
 			let bottomSendMessageMenuTop = 364.361;
-			this.menuType = 'emoji'
+			this.menuType = 'emoji';
 			setTimeout(() => {
 				this.query
 					.select('#chatContent')
@@ -252,13 +288,13 @@ export default {
 				}
 			}, 600);
 		},
-		changeShowMoreMenu(){
-			this.menuType = 'text'
-			this.showMoreMenu = !this.showMoreMenu 
-			this.showEmoji = false 
+		changeShowMoreMenu() {
+			this.menuType = 'text';
+			this.showMoreMenu = !this.showMoreMenu;
+			this.showEmoji = false;
 			let chatContentHeight = '255.53px';
 			let chatContentTop = 98.836;
-			let bottomSendMessageMenuTop = 354.365; 
+			let bottomSendMessageMenuTop = 354.365;
 			setTimeout(() => {
 				this.query
 					.select('#chatContent')
@@ -272,8 +308,7 @@ export default {
 						bottomSendMessageMenuTop = data.top;
 					})
 					.exec();
-				chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
-				console.log(bottomSendMessageMenuTop,chatContentTop,chatContentHeight)
+				chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px'; 
 				this.chatContentHeight = chatContentHeight;
 				this.scrollInfo = 'msg1';
 				if (!this.showMoreMenu) {
@@ -342,9 +377,15 @@ page {
 				}
 				.video {
 					width: 160rpx;
+					height: 163px;
 					overflow: hidden;
+					position: relative;
 					video {
-						width: 100%;
+						width: 100%; 
+						height: 100%;
+						position: absolute;
+						left: 0;
+						top: 0 
 					}
 				}
 				.map {
@@ -352,12 +393,13 @@ page {
 					height: 230rpx;
 					overflow: hidden;
 					position: relative;
-					map {
+					.mapBg {
 						width: 100%;
 						height: calc(100% - 42px);
 						position: absolute;
 						left: 0;
 						bottom: 0;
+						background-color: rgba(0,0,0,0.3);
 					}
 					.mapCover {
 						background-color: #4c64fe;
@@ -483,6 +525,10 @@ page {
 				width: 46rpx;
 				height: 54rpx;
 			}
+			.keyBoard {
+				width: 56rpx;
+				height: 56rpx;
+			}
 			.iptBox {
 				flex: 1;
 				margin-left: 20rpx;
@@ -492,18 +538,29 @@ page {
 				border-radius: 35rpx;
 				border: 1px solid rgba(76, 100, 254, 0.07);
 				padding: 0 32rpx;
+				text-align: center;
 				input {
+					text-align: left;
 					width: 100%;
 					height: 100%;
 					font-size: 28rpx;
 					color: #666;
+				}
+				text {
+					display: inline-block;
+					width: 100%;
+					height: 100%;
+					color: #333;
+					font-size: 12px;
+					font-weight: 700;
+					line-height: 70rpx;
 				}
 			}
 			.emoji {
 				width: 60rpx;
 				height: 60rpx;
 			}
-			.moreMenu{
+			.moreMenu {
 				width: 68rpx;
 				height: 68rpx;
 				margin-left: 26rpx;
@@ -545,33 +602,55 @@ page {
 				}
 			}
 		}
-		
-		.moreMenuBox{
+
+		.moreMenuBox {
 			background-color: #f5f5f8;
 			padding: 0 28rpx;
-			
+
 			padding-top: 18px;
-			.item{
-				width:180rpx;
-				height:180rpx;
-				background:rgba(255,255,255,1);
-				box-shadow:0px 8rpx 18rpx 0px rgba(143,143,143,0.11);
-				border-radius:28rpx;
-				border:1rpx solid rgba(239,243,251,1); 
+			.item {
+				width: 180rpx;
+				height: 180rpx;
+				background: rgba(255, 255, 255, 1);
+				box-shadow: 0px 8rpx 18rpx 0px rgba(143, 143, 143, 0.11);
+				border-radius: 28rpx;
+				border: 1rpx solid rgba(239, 243, 251, 1);
 				margin-right: 76rpx;
 				margin-bottom: 28px;
-				&:nth-child(3n){
+				&:nth-child(3n) {
 					margin-right: 0;
 				}
-				image{
+				image {
 					width: 96rpx;
 					height: 94rpx;
 				}
-				text{
+				text {
 					font-size: 14px;
 					color: #666;
 				}
 			}
+		}
+	}
+
+	.recordingAnimation {
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 14px;
+		background-color: rgba(0, 0, 0, 0.9);
+		font-size: 12px;
+		padding: 4px 0px 19px 5px;
+		text-align: center;
+		color: #fff;
+		.microphone {
+			width: 80px;
+			height: 98px;
+		}
+		.audio {
+			width: 35px;
+			height: 35px;
+			margin-right: 25px;
 		}
 	}
 }
