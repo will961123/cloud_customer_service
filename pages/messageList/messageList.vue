@@ -60,17 +60,25 @@ export default {
 			messageType: 0
 		};
 	},
-	methods:{
-		gotoChat(id,type){
+	methods: {
+		gotoChat(id, type) {
+			let url = '/pages/messageList/chat?id=1&type=2';
+			// #ifdef APP-PLUS
+			console.log('app')
+			url = '/pages/messageList/chat2?id=1&type=2';
+			// #endif
 			uni.navigateTo({
-				url:"/pages/messageList/chat?id=1&type=2"
-			})
+				url
+			});
 		}
 	}
 };
 </script>
 
 <style lang="scss">
+	@import '/colorui/main.css';
+	@import '/colorui/animation.css';
+	@import '/colorui/icon.css';
 .messageListView {
 	padding-bottom: 100px;
 	min-height: 100vh;

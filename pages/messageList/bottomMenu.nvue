@@ -1,0 +1,368 @@
+<template>
+	<view :style="{ height: windowHeight + 'px', width: windowWidth + 'px' }" class="recording">
+		<view :style="{ width: windowWidth + 'px' }" class="bottomSendMessageMenu">
+			<view class="content type-send  align-center ">
+				<image v-if="menuType !== 'audio'" @click="changeAudioType(true)" class="microphone" src="/static/chat_pic1.png" mode="aspectFill"></image>
+				<image v-if="menuType === 'audio'" @click="changeAudioType(false)" class="keyBoard" src="/static/chat_pic10.png" mode="aspectFill"></image>
+				<view class="iptBox text-center">
+					<input v-if="menuType !== 'audio'" class="iptInput" @blur="changeFocus(false)" @focus="changeFocus(true)" type="text" />
+					<text class="iptText" @touchstart="audioTouchStart" @touchend="audioTouchEnd" v-if="menuType === 'audio'">{{ isRecording ? '松开发送' : '按住说话' }}</text>
+				</view>
+				<image @click="changeShowEmoji" class="showEmoji" src="/static/chat_pic2.png" mode="aspectFill"></image>
+				<image v-if="menuType === 'text' && !iptFocus" class="moreMenu" @click="changeShowMoreMenu" src="/static/chat_pic3.png" mode="aspectFill"></image>
+				<button style="font-size: 10px;" v-if="iptFocus || menuType === 'emoji' || menuType === 'audio'" class="sendBtn  ">
+					<text style="flex: 1;color: #fff;font-size: 12px;text-align: center;">发送</text>
+				</button>
+			</view>
+
+			<view :style="{ width: 'calc(' + windowWidth + 'px' - '50px)' }" class="emojiBox" v-if="showEmoji">
+				<!-- <view class="emojiBox" v-if="showEmoji" :class="showEmoji ? 'animation-slide-bottom' : ''"> -->
+				<swiper style="flex: 1;" :indicator-dots="true">
+					<swiper-item v-for="(swItem, swIndex) in parseInt(emojiName.allEmoji.length / 8 / 4)" :key="index">
+						<view class="emojiTit"><text style="flex: 1;color: #666;font-size: 12px;margin-bottom: 6px">最近使用</text></view>
+						<view class="emojiList   flex-row  align-center flex-wrap">
+							<view @click="emojiClick(item)" v-for="(item, index) in emojiName.recentlyUsed" :key="index" style="margin-bottom: 9px;" class="emojiItem">
+								<image class="emojiItemImage" :src="'/static/emoji/' + item" mode="aspectFill"></image>
+							</view>
+						</view>
+						<view class="emojiTit"><text style="flex: 1;color: #666;font-size: 12px;margin-bottom: 6px;">所有表情</text></view>
+						<view class="emojiList  flex-row  align-center flex-wrap">
+							<view
+								@click="emojiClick(item)"
+								v-if="index >= swIndex * 8 * 4 && index < (swIndex + 1) * 8 * 4"
+								v-for="(item, index) in emojiName.allEmoji"
+								:key="index"
+								class="emojiItem"
+							>
+								<image class="emojiItemImage" :src="'/static/emoji/' + item" mode="aspectFill"></image>
+							</view>
+						</view>
+					</swiper-item> 
+				</swiper>
+			</view>
+			<view class="moreMenuBox flex-row flex-wrap align-center" v-if="showMoreMenu">
+				<view
+					:class="index === 2 ? 'no-margin-right' : ''"
+					v-for="(item, index) in meunList"
+					:key="index"
+					class="moreMenuItem   flex-direction align-center justify-center"
+				>
+					<image class="moreMenuItemImage" :src="item.icon" mode="aspectFill"></image>
+					<text class="moreMenuItemText">{{ item.name }}</text>
+				</view>
+			</view>
+		</view>
+
+		<view :style="{ left: windowWidth / 2 + 'px', top: windowHeight / 2 + 'px' }" v-if="menuType === 'audio' && isRecording" class="recordingAnimation">
+			<view class="flex-row align-center" style="align-items: center;" >
+				<image class="recordingAnimationMicrophone" src="/static/chat_pic11.png" mode="aspectFill"></image>
+				<image class="recordingAnimationAudio" src="/static/chat_pic12.png" mode="aspectFill"></image>
+			</view>
+			<text style="flex: 1;color: #ffffff;font-size: 12px;text-align: center;">手指上滑，取消发送</text>
+		</view>
+	</view>
+</template>
+
+<script>
+import emojiName from '../../static/emoji/name.js';
+export default {
+	data() {
+		return {
+			emojiName: emojiName,
+			windowWidth: 375,
+			windowHeight: 500,
+			menuType: 'text',
+			showEmoji: false,
+			showMoreMenu: false,
+			isRecording: false,
+			iptFocus: false,
+			meunList: [
+				{ icon: '/static/chat_pic9.png', name: '拍摄' },
+				{ icon: '/static/chat_pic5.png', name: '相册' },
+				{ icon: '/static/chat_pic6.png', name: '位置' },
+				{ icon: '/static/chat_pic7.png', name: '名片' },
+				{ icon: '/static/chat_pic8.png', name: '文件' }
+			]
+		};
+	},
+	onReady() {
+		const { windowWidth, windowHeight } = uni.getSystemInfoSync();
+		// console.log(windowWidth, windowHeight);
+		this.windowWidth = windowWidth;
+		this.windowHeight = windowHeight;
+	},
+	methods: {
+		changeAudioType(type) {
+			this.menuType = type ? 'audio' : 'text';
+			this.isRecording = false;
+		},
+		changeFocus(type) {
+			console.log(type);
+			this.iptFocus = type;
+		},
+		audioTouchStart() {
+			uni.$emit('audioTouchStart', {
+				type: 1
+			});
+			this.isRecording = true;
+
+			// const subNVue = uni.getSubNVueById('popup'); // 通过 id 获取 nvue 子窗体
+			// subNVue.show('slide-in-top', 250); // 打开 nvue 子窗体
+		},
+		audioTouchEnd() {
+			uni.$emit('audioTouchEnd', {
+				type: 0
+			});
+			this.isRecording = false;
+
+			// const subNVue = uni.getSubNVueById('popup'); // 通过 id 获取 nvue 子窗体
+			// subNVue.hide('slide-in-top', 250); // 打开 nvue 子窗体
+		},
+		changeShowEmoji() {
+			this.showEmoji = !this.showEmoji;
+			this.showMoreMenu = false;
+			let chatContentHeight = '265.53px';
+			let chatContentTop = 98.836;
+			let bottomSendMessageMenuTop = 364.361;
+			this.menuType = 'emoji';
+			// setTimeout(() => {
+			// 	this.query
+			// 		.select('#chatContent')
+			// 		.boundingClientRect(data => {
+			// 			chatContentTop = data.top;
+			// 		})
+			// 		.exec();
+			// 	this.query
+			// 		.select('#bottomSendMessageMenu')
+			// 		.boundingClientRect(data => {
+			// 			bottomSendMessageMenuTop = data.top;
+			// 		})
+			// 		.exec();
+			// 	chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
+			// 	this.chatContentHeight = chatContentHeight;
+			// 	this.scrollInfo = 'msg1';
+			// 	if (!this.showEmoji) {
+			// 		this.chatContentHeight = this.maxHeight;
+			// 	}
+			// }, 600);
+		},
+		changeShowMoreMenu() {
+			this.menuType = 'text';
+			this.showMoreMenu = !this.showMoreMenu;
+			this.showEmoji = false;
+			// let chatContentHeight = '255.53px';
+			// let chatContentTop = 98.836;
+			// let bottomSendMessageMenuTop = 354.365;
+			// setTimeout(() => {
+			// 	this.query
+			// 		.select('#chatContent')
+			// 		.boundingClientRect(data => {
+			// 			chatContentTop = data.top;
+			// 		})
+			// 		.exec();
+			// 	this.query
+			// 		.select('#bottomSendMessageMenu')
+			// 		.boundingClientRect(data => {
+			// 			bottomSendMessageMenuTop = data.top;
+			// 		})
+			// 		.exec();
+			// 	chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
+			// 	this.chatContentHeight = chatContentHeight;
+			// 	this.scrollInfo = 'msg1';
+			// 	if (!this.showMoreMenu) {
+			// 		this.chatContentHeight = this.maxHeight;
+			// 	}
+			// }, 600);
+		},
+		emojiClick(item) {
+			uni.$emit('emojiname', {
+				name: item
+			});
+		}
+	}
+};
+</script>
+
+<style scoped>
+/* @import '/colorui/main.css';
+@import '/colorui/animation.css';
+@import '/colorui/icon.css'; */
+.recording {
+	flex: 1;
+	/* width: 375px; */
+	height: 500px;
+	position: absolute;
+}
+.flex-row {
+	flex-direction: row;
+}
+.bottomSendMessageMenu {
+	flex: 1;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.content {
+	height: 116rpx;
+	padding-left: 32rpx;
+	background-color: #fff;
+	align-items: center;
+	/* display: flex; */
+	flex-direction: row;
+}
+.microphone {
+	width: 46rpx;
+	height: 54rpx;
+}
+.keyBoard {
+	width: 56rpx;
+	height: 56rpx;
+}
+.iptBox {
+	flex: 1;
+	margin-left: 20rpx;
+	margin-right: 30rpx;
+	background-color: rgba(247, 247, 248, 1);
+	height: 70rpx;
+	border-radius: 35rpx;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(76, 100, 254, 0.07);
+	padding: 0 32rpx;
+	text-align: center;
+}
+.iptInput {
+	color: #666;
+	height: 70rpx;
+	font-size: 28upx;
+}
+.iptText {
+	/* display: block; */
+	flex: 1;
+	text-align: center;
+	height: 100%;
+	color: #333;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 70rpx;
+}
+.showEmoji {
+	width: 60rpx;
+	height: 60rpx;
+}
+.moreMenu {
+	width: 68rpx;
+	height: 68rpx;
+	margin-left: 26rpx;
+	margin-right: 20rpx;
+}
+.sendBtn {
+	/* padding: 0; */
+	width: 132upx;
+	height: 60upx;
+	line-height: 60upx;
+	background-color: rgba(76, 100, 254, 1);
+	border-radius: 14upx;
+	color: #fff;
+	text-align: center;
+	margin-left: 22upx;
+
+	/* box-shadow: 0px 2upx 5upx 0upx rgba(92, 102, 162, 0.17), 0upx 2upx 7upx 0px rgba(102, 114, 251, 0.6); */
+}
+
+.emojiBox {
+	flex: 1;
+	padding: 11px 14px 0 14px;
+	background-color: #f5f5f8;
+	height: 284px;
+	/* background-color: red; */
+}
+
+.emojiTit {
+	color: #666;
+	font-size: 12px;
+	font-weight: 700;
+	margin-bottom: 6px;
+}
+.emojiList {
+	/* flex: 1; */
+	margin-bottom: 5px;
+	flex-wrap: wrap;
+}
+.emojiItem {
+	flex: 1;
+	width: 40%;
+	/* width: 12.5%; */
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.emojiItemImage {
+	flex: 1;
+	width: 24px;
+	height: 24px;
+}
+
+.moreMenuBox {
+	background-color: #f5f5f8;
+	padding: 0 28rpx;
+	/* padding-left: 30rpx; */
+	padding-top: 18px;
+	flex-wrap: wrap;
+	align-items: center;
+}
+.moreMenuItem {
+	width: 180rpx;
+	height: 180rpx;
+	background-color: rgba(255, 255, 255, 1);
+	/* box-shadow: 0px 2px 1px 0px rgba(143, 143, 143, 0.11); */
+/* 	box-shadow: 0px 4rpx 9rpx 0px rgba(143, 143, 143, 0.11); */
+	border-radius: 28rpx;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(239, 243, 251, 1);
+	background-color: #fff;
+
+	/* margin-right: 60rpx; */
+	margin-right: 76rpx;
+	margin-bottom: 28px;
+	
+	align-items: center;
+	justify-content: center;
+}
+.no-margin-right {
+	margin-right: 0 !important;
+}
+
+.moreMenuItemImage {
+	width: 96rpx;
+	height: 94rpx;
+}
+.moreMenuItemText {
+	font-size: 14px;
+	color: #666;
+}
+
+.recordingAnimation {
+	position: fixed;
+	/* left: 50%;
+	top: 50%;*/
+	transform: translate(-50%, -50%);
+	border-radius: 14px;
+	background-color: rgba(0, 0, 0, 0.9);
+	font-size: 12px;
+	padding: 4px 0px 19px 5px;
+	text-align: center;
+	color: #ffffff;
+	z-index: 999;
+}
+.recordingAnimationMicrophone {
+	width: 80px;
+	height: 98px;
+}
+.recordingAnimationAudio {
+	width: 35px;
+	height: 35px;
+	margin-right: 25px;
+}
+</style>

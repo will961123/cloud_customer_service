@@ -10,10 +10,11 @@ export default {
 </script>
 
 <style>
-/*每个页面公共css */
-@import 'colorui/main.css';
-@import 'colorui/icon.css';
-@import "/colorui/animation.css";
+/*每个页面公共css */ 
+
+
+ 
+/* #ifndef APP-PLUS-NVUE */
 page{
 	font-family:PingFang;
 	/* font-family:FZLTXHK--GBK1-0,FZLTXHK--GBK1; */
@@ -31,4 +32,8 @@ page{
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 }
+/* #endif */
+
+ 
+
 </style>

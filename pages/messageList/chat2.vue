@@ -8,8 +8,7 @@
 			<view @click="gotoInfomation" class="cuIcon cuIcon-more"></view>
 		</view>
 
-		<!-- <scroll-view :style="{ height: chatContentHeight }" scroll-y="true" scroll-with-animation  :scroll-into-view="scrollInfo" id="chatContent" class="chatContent"> -->
-		<view  :style="{ height: chatContentHeight }"  id="chatContent" class="chatContent">
+		<view id="chatContent" class="chatContent">
 			<view class="message message-left message-text flex flex-wrap">
 				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
 				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center">
@@ -35,23 +34,6 @@
 					<view class="message-time">15:01</view>
 				</view>
 			</view>
-
-			<!-- <view class="message message-left message-audio flex flex-wrap">
-				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
-				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center">
-					<view class="message-content">
-						<view class="audio">
-							<audio src=""></audio>
-							<view class="audioInfo flex align-center">
-								<text>60"</text>
-								<image src="/static/chat_pic4l.png" mode="aspectFill"></image>
-							</view>
-						</view>
-					</view>
-					<view class="message-time">15:01</view>
-				</view>
-			</view>
- -->
 			<view class="message message-right message-audio  flex flex-wrap ">
 				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center justify-end">
 					<view class="message-time">15:01</view>
@@ -78,16 +60,6 @@
 				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
 			</view>
 
-			<!-- <view class="message message-left message-image flex flex-wrap">
-				<image class="head" src="/static/logo.png" mode="aspectFill"></image>
-				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center">
-					<view class="message-content">
-						<view class="image"><image src="/static/message-image1.jpg" mode="widthFix"></image></view>
-					</view>
-					<view class="message-time">15:01</view>
-				</view>
-			</view> -->
-
 			<view class="message message-right message-image  flex flex-wrap ">
 				<view style="flex: 1;margin-top: 20rpx;" class="flex align-center justify-end">
 					<view class="message-time">15:01</view>
@@ -103,7 +75,13 @@
 					<view class="message-time">15:01</view>
 					<view class="message-content">
 						<view class="video">
-							<video :show-center-play-btn="true" :controls="false" :show-play-btn="false" objectFit="cover" src="https://img-cdn-qiniu.dcloud.net.cn/hello-nvue-swiper-vertical-02.mp4"></video>
+							<video
+								:show-center-play-btn="true"
+								:controls="false"
+								:show-play-btn="false"
+								objectFit="cover"
+								src="https://img-cdn-qiniu.dcloud.net.cn/hello-nvue-swiper-vertical-02.mp4"
+							></video>
 						</view>
 					</view>
 				</view>
@@ -119,9 +97,7 @@
 								<view class="tit">天河广场</view>
 								<view class="desc">广东省某某详细地址</view>
 							</view>
-							<view class="mapBg">
-								
-							</view> 
+							<view class="mapBg"></view>
 						</view>
 					</view>
 				</view>
@@ -129,7 +105,7 @@
 			</view>
 		</view>
 
-		<view   id="bottomSendMessageMenu" class="bottomSendMessageMenu bg-white"> 
+		<!-- <view style="display: none;"   id="bottomSendMessageMenu" class="bottomSendMessageMenu bg-white"> 
 			<view class="content type-send flex align-center">
 				<image v-show="menuType !== 'audio'" @click="changeAudioType(true)" class="microphone" src="/static/chat_pic1.png" mode="aspectFill"></image>
 				<image v-show="menuType === 'audio'" @click="changeAudioType(false)" class="keyBoard" src="/static/chat_pic10.png" mode="aspectFill"></image>
@@ -143,7 +119,6 @@
 			</view>
 
 			<view class="emojiBox" v-show="showEmoji">
-				<!-- 			<view class="emojiBox" v-show="showEmoji" :class="showEmoji ? 'animation-slide-bottom' : ''"> -->
 				<view class="tit">最近使用</view>
 				<view class="emojiList flex align-center flex-wrap">
 					<view @click="emojiClick(item)" v-for="(item, index) in emojiName.recentlyUsed" :key="index" class="item">
@@ -164,9 +139,7 @@
 					<text>{{ item.name }}</text>
 				</view>
 			</view>
-		</view>
- 
-
+		</view> 
 		<view v-show="menuType==='audio'&&isRecording" class="recordingAnimation">
 			<view class="flex align-center">
 				<image class="microphone" src="/static/chat_pic11.png" mode="aspectFill"></image>
@@ -175,7 +148,7 @@
 			<view >
 				手指上滑，取消发送
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -205,27 +178,44 @@ export default {
 		};
 	},
 	onReady() {
-		const query = uni.createSelectorQuery().in(this);
-		this.query = query;
-		let chatContentHeight = '507px';
-		let chatContentTop = 98.836;
-		let bottomSendMessageMenuTop = 608.357;
-		query
-			.select('#chatContent')
-			.boundingClientRect(data => {
-				chatContentTop = data.top;
-			})
-			.exec();
-		query
-			.select('#bottomSendMessageMenu')
-			.boundingClientRect(data => {
-				bottomSendMessageMenuTop = data.top;
-			})
-			.exec();
-		// chatContentHeight = 'calc(100vh - ' + (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px)';
-		chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
-		this.chatContentHeight = chatContentHeight;
-		this.maxHeight = this.chatContentHeight; 
+		// const query = uni.createSelectorQuery().in(this);
+		// this.query = query;
+		// let chatContentHeight = '507px';
+		// let chatContentTop = 98.836;
+		// let bottomSendMessageMenuTop = 608.357;
+		// query
+		// 	.select('#chatContent')
+		// 	.boundingClientRect(data => {
+		// 		chatContentTop = data.top;
+		// 	})
+		// 	.exec();
+		// query
+		// 	.select('#bottomSendMessageMenu')
+		// 	.boundingClientRect(data => {
+		// 		bottomSendMessageMenuTop = data.top;
+		// 	})
+		// 	.exec();
+		
+		
+		// // chatContentHeight = 'calc(100vh - ' + (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px)';
+		
+		// chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
+		// this.chatContentHeight = chatContentHeight;
+		// this.maxHeight = this.chatContentHeight;
+
+		const subNVue = uni.getSubNVueById('popup');
+		subNVue.show('slide-in-top', 250);
+	},
+	onLoad() {
+		uni.$on('emojiname', data => {
+			console.log(data.name);
+		});
+		uni.$on('audioTouchStart', data => {
+			console.log('开始');
+		});
+		uni.$on('audioTouchEnd', data => {
+			console.log('结束');
+		});
 	},
 	methods: {
 		gotoInfomation() {
@@ -308,7 +298,7 @@ export default {
 						bottomSendMessageMenuTop = data.top;
 					})
 					.exec();
-				chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px'; 
+				chatContentHeight = (bottomSendMessageMenuTop - chatContentTop).toFixed(2) + 'px';
 				this.chatContentHeight = chatContentHeight;
 				this.scrollInfo = 'msg1';
 				if (!this.showMoreMenu) {
@@ -324,9 +314,9 @@ export default {
 </script>
 
 <style lang="scss">
-	@import '/colorui/main.css';
-	@import '/colorui/animation.css';
-	@import '/colorui/icon.css';
+@import '/colorui/main.css';
+@import '/colorui/animation.css';
+@import '/colorui/icon.css';
 page {
 	background-color: #fff;
 }
@@ -334,14 +324,17 @@ page {
 	min-height: 100vh;
 	background-color: #fff;
 	padding-top: 54px;
+	overflow: hidden;
 	.backBox {
 		padding: 0 50rpx;
 		padding-top: 23px; 
 		position: fixed;
+		z-index: 999;
 		left: 0;
 		top: 0;
 		width: 100%;
-		height: 54px;
+		height: 54px; 
+		background-color: #fff;
 		.back {
 			font-size: 46rpx;
 			color: #333;
@@ -354,11 +347,10 @@ page {
 		}
 	}
 	.chatContent {
-		overflow-y: auto;
 		margin-top: 46px;
 		padding-left: 66rpx;
 		padding-right: 66rpx;
-		// padding-bottom: 116rpx;
+		padding-bottom: 116rpx;
 		.message {
 			margin-bottom: 40px;
 			.head {
@@ -388,14 +380,19 @@ page {
 				.video {
 					width: 160rpx;
 					height: 163px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 					overflow: hidden;
-					position: relative;
+					// position: relative;
 					video {
-						width: 100%; 
-						height: 100%;
-						position: absolute;
-						left: 0;
-						top: 0 
+						width: 160rpx;
+						height: 163px; 
+						// width: 100%;
+						// height: 100%;
+						// position: absolute;
+						// left: 0;
+						// top: 0;
 					}
 				}
 				.map {
@@ -409,7 +406,7 @@ page {
 						position: absolute;
 						left: 0;
 						bottom: 0;
-						background-color: rgba(0,0,0,0.3);
+						background-color: rgba(0, 0, 0, 0.3);
 					}
 					.mapCover {
 						background-color: #4c64fe;

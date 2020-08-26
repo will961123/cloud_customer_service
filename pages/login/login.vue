@@ -53,7 +53,11 @@ export default {
 </script>
 
 <style scoped lang="scss"> 
+@import '/colorui/main.css';
+@import '/colorui/animation.css';
+@import '/colorui/icon.css';
 .loginView {
+	// min-height: 100vh;
 	background-color: #4c64fe;
 	.titleBox {
 		padding: 58px 30px 0 30px;

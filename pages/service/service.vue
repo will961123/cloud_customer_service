@@ -3,6 +3,8 @@
 		<view class="titleBox"><view class="tit">应用服务</view></view>
 		<!-- <navigator url="./demo">demo</navigator> -->
 <!-- 		<navigator url="./s1">subNVues</navigator> -->
+		<!-- <navigator url="../login/login">login</navigator> -->
+		<!-- <navigator url="../messageList/chat2">chat2</navigator> -->
 		<view :style="{ height: menuBoxHeight }" id="menuBox" class="menuBox bg-white">
 			<view class="menuType">云交付</view>
 			<view style="margin-bottom: 30px;" class="menuList flex  ">
@@ -64,6 +66,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+	@import '/colorui/main.css';
+	@import '/colorui/animation.css';
+	@import '/colorui/icon.css';
 .serviceView {
 	background-color: #4c64fe;
 	// padding-bottom: 60px;

@@ -48,6 +48,9 @@ export default {
 </script>
 
 <style lang="scss">
+	@import '/colorui/main.css';
+	@import '/colorui/animation.css';
+	@import '/colorui/icon.css';
 .tabbarBox {
 	position: fixed;
 	z-index: 99999;

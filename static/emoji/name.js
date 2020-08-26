@@ -4,6 +4,10 @@ export default {
 		"face-screaming-in-fear_1f631.png",
 		"face-throwing-a-kiss_1f618.png",
 		"face-with-cold-sweat_1f613.png",
+		"face-with-open-mouth_1f62e.png",
+		"face-with-party-horn-and-party-hat_1f973.png",
+		"face-with-pleading-eyes_1f97a.png",
+		"face-with-rolling-eyes_1f644.png",
 	],
 	allEmoji: [
 		"anger-symbol_1f4a2.png",

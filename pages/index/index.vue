@@ -7,7 +7,7 @@
 					<view class="tip">当前项目</view>
 				</view>
 				<button class="btn cu-btn">切换项目</button>
-			</view> 
+			</view>
 
 			<view class="canvasAndTodoList flex align-center">
 				<view :style="{ width: cWidth + 'px', height: cHeight + 'px', overflow: 'hidden' }" class="canvasBox">
@@ -76,7 +76,7 @@
 			</view>
 		</view>
 
-		<willTabbar :nowTabIdx="0"  ></willTabbar>
+		<willTabbar :nowTabIdx="0"></willTabbar>
 	</view>
 </template>
 
@@ -93,7 +93,7 @@ export default {
 		};
 	},
 	onLoad() {
-		this.cWidth = uni.upx2px(350);
+		this.cWidth = uni.upx2px(320);
 		this.cHeight = uni.upx2px(260);
 		let pageConfig = {
 			canvas: 'canvasRing',
@@ -124,7 +124,7 @@ export default {
 					margin: 5,
 					borderWidth: 1
 				},
-				colors :['#E8523F',"#F8B849","#4C64FE","#EFF3FB"],
+				colors: ['#E8523F', '#F8B849', '#4C64FE', '#EFF3FB'],
 				title: {
 					name: config.totNum,
 					color: '#000000',
@@ -164,6 +164,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '/colorui/main.css';
+@import '/colorui/animation.css';
+@import '/colorui/icon.css';
+.textov1 {
+	/* display: block; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 page {
 	background-color: #fff;
 }
@@ -206,7 +215,7 @@ page {
 			margin-left: -14px;
 		}
 		.infoBox {
-			margin-left: -14px;
+			margin-left: -16px;
 			.tit {
 				color: #16123f;
 				font-size: 18px;
@@ -219,7 +228,7 @@ page {
 				margin: 4px 0;
 			}
 			.legend {
-				font-size: 11px;
+				font-size: 22rpx;
 				color: #aaaaaa;
 				.item {
 					padding-left: 6px;
@@ -233,21 +242,21 @@ page {
 						content: '';
 						width: 6px;
 						height: 6px;
-						border-radius: 50%; 
+						border-radius: 50%;
 					}
-					&.blue{
-						&::after{
-							background-color: #4C64FE;
+					&.blue {
+						&::after {
+							background-color: #4c64fe;
 						}
 					}
-					&.yellow{
-						&::after{
-							background-color: #F8B849;
+					&.yellow {
+						&::after {
+							background-color: #f8b849;
 						}
 					}
-					&.red{
-						&::after{
-							background-color: #E8523F;
+					&.red {
+						&::after {
+							background-color: #e8523f;
 						}
 					}
 				}
@@ -295,6 +304,7 @@ page {
 					}
 					.tit {
 						height: 1.4em;
+						font-size: 24rpx;
 					}
 				}
 			}

@@ -53,6 +53,9 @@ export default {
 </script>
 
 <style lang="scss">
+	@import '/colorui/main.css';
+	@import '/colorui/animation.css';
+	@import '/colorui/icon.css';
 .myView {
 	min-height: 100vh;
 	background-color: #fff;
